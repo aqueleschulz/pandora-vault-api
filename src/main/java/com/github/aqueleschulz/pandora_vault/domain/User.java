@@ -1,16 +1,20 @@
 package com.github.aqueleschulz.pandora_vault.domain;
 
-import java.math.BigDecimal;
+ import java.math.BigDecimal;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor; 
 
-@Entity(name = "users")
+@Entity
 @Table(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -33,6 +37,7 @@ public class User {
 
     private String password;
 
+    @Column(precision = 13, scale = 2) 
     private BigDecimal balance;
     
     @Enumerated(EnumType.STRING)
