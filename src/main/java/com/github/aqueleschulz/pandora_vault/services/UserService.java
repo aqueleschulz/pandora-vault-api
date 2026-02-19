@@ -3,7 +3,7 @@ package com.github.aqueleschulz.pandora_vault.services;
 import org.springframework.stereotype.Service;
 
 import com.github.aqueleschulz.pandora_vault.repositories.UserRepository;
-import com.github.aqueleschulz.pandora_vault.dtos.UserDTO;
+import com.github.aqueleschulz.pandora_vault.dtos.UserRequestDTO;
 import com.github.aqueleschulz.pandora_vault.domain.User;
 
 import lombok.RequiredArgsConstructor;
@@ -11,9 +11,9 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    public User createUser(UserDTO data)
+    public User createUser(UserRequestDTO data)
     {
         User newUser = User.builder()
         .firstName(data.firstName())
@@ -24,6 +24,14 @@ public class UserService {
         .password(data.password())
         .userType(data.userType())
         .build();
+
+        userRepository.findByDocument(data.document()).ifPresent(user -> {
+            throw new IllegalArgumentException("Documento já cadastrado.");
+        });
+
+        userRepository.findByEmail(data.email()).ifPresent(user -> {
+            throw new IllegalArgumentException("Email já cadastrado.");
+        });
 
         return userRepository.save(newUser);
     }
